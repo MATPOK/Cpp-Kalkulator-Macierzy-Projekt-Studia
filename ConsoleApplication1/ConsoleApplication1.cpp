@@ -19,7 +19,7 @@ int main() {
             break;
         }
 
-        interpreter.interpretuj(input);
+        interpreter.Interpretuj(input);
     }
 
     return 0;

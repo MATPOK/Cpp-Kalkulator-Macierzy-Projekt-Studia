@@ -1,25 +1,25 @@
 #include "Interpreter.h"
 
 
-void Interpreter::interpretuj(const std::string& input) {
+void Interpreter::Interpretuj(const std::string& input) {
     if (input.find('=') != std::string::npos) {
-        przetworzPrzypisanie(input);
+        PrzetworzPrzypisanie(input);
     }
     else if (input.find("transpozycja") != std::string::npos) {
-        przetworzTranspozycje(input);
+        PrzetworzTranspozycje(input);
     }
     else if (input.find("wyswietl") != std::string::npos) {
-        przetworzWyswietlanie(input);
+        PrzetworzWyswietlanie(input);
     }
     else if (input.find("wyznacznik") != std::string::npos) {
-        przetworzWyznacznik(input);
+        PrzetworzWyznacznik(input);
     }
     else {
         std::cout << "Nieznana komenda: " << input << "\n";
     }
 }
 
-void Interpreter::przetworzPrzypisanie(const std::string& input) {
+void Interpreter::PrzetworzPrzypisanie(const std::string& input) {
     std::regex pattern(R"((\w+)\s*=\s*(.+))");
     std::smatch match;
     if (std::regex_match(input, match, pattern)) {
@@ -27,10 +27,10 @@ void Interpreter::przetworzPrzypisanie(const std::string& input) {
         std::string wyrazenie = match[2];
 
         if (wyrazenie[0] == '[') {
-            utworzMacierz(nazwa, wyrazenie);
+            UtworzMacierz(nazwa, wyrazenie);
         }
         else {
-            wykonajOperacje(nazwa, wyrazenie);
+            WykonajOperacje(nazwa, wyrazenie);
         }
     }
     else {
@@ -38,7 +38,7 @@ void Interpreter::przetworzPrzypisanie(const std::string& input) {
     }
 }
 
-void Interpreter::utworzMacierz(const std::string& nazwa, const std::string& dane) {
+void Interpreter::UtworzMacierz(const std::string& nazwa, const std::string& dane) {
     std::regex matrixPattern(R"(\[(.+)\])");
     std::smatch match;
     if (std::regex_match(dane, match, matrixPattern)) {
@@ -77,7 +77,7 @@ void Interpreter::utworzMacierz(const std::string& nazwa, const std::string& dan
     }
 }
 
-void Interpreter::wykonajOperacje(const std::string& nazwa, const std::string& wyrazenie) {
+void Interpreter::WykonajOperacje(const std::string& nazwa, const std::string& wyrazenie) {
     std::regex operationPattern(R"((\w+)\s*([+\-*/])\s*(\w+))");
     std::smatch match;
     if (std::regex_match(wyrazenie, match, operationPattern)) {
@@ -86,7 +86,7 @@ void Interpreter::wykonajOperacje(const std::string& nazwa, const std::string& w
         std::string op2 = match[3];
 
         if (macierze.find(op1) != macierze.end() && macierze.find(op2) != macierze.end()) {
-            Macierz wynik(wykonajDzialanie(macierze[op1], operacja, macierze[op2]));
+            Macierz wynik(WykonajDzialanie(macierze[op1], operacja, macierze[op2]));
             macierze[nazwa] = wynik;
             wynik.ZmienNazwe(nazwa[0]);
             wynik.Wypisz();
@@ -100,7 +100,7 @@ void Interpreter::wykonajOperacje(const std::string& nazwa, const std::string& w
     }
 }
 
-Macierz Interpreter::wykonajDzialanie(const Macierz& m1, const std::string& operacja, const Macierz& m2) {
+Macierz Interpreter::WykonajDzialanie(const Macierz& m1, const std::string& operacja, const Macierz& m2) {
     if (operacja == "+") {
         return m1 + m2;
     }
@@ -118,7 +118,7 @@ Macierz Interpreter::wykonajDzialanie(const Macierz& m1, const std::string& oper
     }
 }
 
-void Interpreter::przetworzTranspozycje(const std::string& input) {
+void Interpreter::PrzetworzTranspozycje(const std::string& input) {
     std::regex pattern(R"(transpozycja\((\w+)\))");
     std::smatch match;
     if (std::regex_match(input, match, pattern)) {
@@ -139,7 +139,7 @@ void Interpreter::przetworzTranspozycje(const std::string& input) {
     }
 }
 
-void Interpreter::przetworzWyznacznik(const std::string& input) {
+void Interpreter::PrzetworzWyznacznik(const std::string& input) {
     std::regex pattern(R"(wyznacznik\((\w+)\))");
     std::smatch match;
     if (std::regex_match(input, match, pattern)) {
@@ -158,7 +158,7 @@ void Interpreter::przetworzWyznacznik(const std::string& input) {
     }
 }
 
-void Interpreter::przetworzWyswietlanie(const std::string& input)
+void Interpreter::PrzetworzWyswietlanie(const std::string& input)
 {
     std::regex pattern(R"(wyswietl\((\w+)\))");
     std::smatch match;
