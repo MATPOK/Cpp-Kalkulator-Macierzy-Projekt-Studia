@@ -6,29 +6,29 @@ using namespace std;
 
 Macierz::Macierz(int wym, char nazwa):wymiar(wym), nazwa(nazwa)
 {
-	tablica = new double[wym * wym];
+	wartosci = new double[wym * wym];
 	Zeros();
 }
 
 
 
 Macierz::Macierz(const Macierz & wzor) : wymiar(wzor.zWymiar()) {
-	tablica = new double[wymiar * wymiar];
+	wartosci = new double[wymiar * wymiar];
 	for (int i = 0; i < wymiar * wymiar; ++i) {
-		tablica[i] = wzor.zTablice()[i];
+		wartosci[i] = wzor.zWszystkieWartosci()[i];
 	}
 }
 
 
 Macierz::~Macierz()
 {
-	delete [] tablica;
+	delete [] wartosci;
 }
 
 Macierz::Macierz()
 {
 	wymiar = 0;
-	tablica = new double[0];
+	wartosci = new double[0];
 	nazwa = ' ';
 }
 
@@ -37,25 +37,26 @@ const int Macierz::zWymiar() const
 	return wymiar;
 }
 
-double* Macierz::zTablice() const
+double* Macierz::zWszystkieWartosci() const
 {
-	return tablica;
+	return wartosci;
 }
 
 const double& Macierz::zWartosc(int w, int k) const {
-	return tablica[w * wymiar + k];
+	return wartosci[w * wymiar + k];
 }
 
 
 void Macierz::UstawWartosc(int w, int k, double nowa)
 {
-	tablica[w * wymiar + k] = nowa;
+	wartosci[w * wymiar + k] = nowa;
 }
 
 const void Macierz::Wypisz() const {
-	const int szerokosc = 8; 
+	/////////////////////////////////////////////////////mozliwosc zmiany sposobu wyswietlania macierzy/////////////////////////////////////////////
+	const int szerokosc = 8;             
 	const int precyzja = 3; 
-
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	std::cout << "Macierz " <<nazwa<<"\n";
 	for (int i = 0; i < wymiar; i++) {
 		std::cout << "|"; 
@@ -70,7 +71,7 @@ const void Macierz::Wypisz() const {
 
 void Macierz::Wpisz()
 {
-	double* tab = zTablice();
+	double* tab = zWszystkieWartosci();
 	double a;
 	for (int i = 0; i < wymiar * wymiar; i++) {
 		cin >> a;
@@ -175,12 +176,12 @@ void Macierz::Odejmij(Macierz& A)
 Macierz& Macierz::operator=(const Macierz& A) {
 	if (this != &A) { 
 		if (wymiar != A.wymiar) {
-			delete[] tablica; 
+			delete[] wartosci; 
 			wymiar = A.wymiar;
-			tablica = new double[wymiar * wymiar]; 
+			wartosci = new double[wymiar * wymiar]; 
 		}
 		for (int i = 0; i < wymiar * wymiar; ++i) {
-			tablica[i] = A.tablica[i];
+			wartosci[i] = A.wartosci[i];
 		}
 	}
 	return *this;
@@ -219,7 +220,7 @@ Macierz Macierz::Mnozenie(const Macierz& A) const
 		for (int i = 0; i < wymiar; i++) {
 			for (int j = 0; j < wymiar; j++) {
 				for (int z = 0; z < wymiar; z++) {
-					wynik.zTablice()[i * wymiar + j] += tablica[i * wymiar + z] * A.zTablice()[z * wymiar + j];
+					wynik.zWszystkieWartosci()[i * wymiar + j] += wartosci[i * wymiar + z] * A.zWszystkieWartosci()[z * wymiar + j];
 				}
 			}
 		}
@@ -304,9 +305,9 @@ double Macierz::Det() const
 
 void Macierz::Przypisz(const Macierz& A) {
 	if (wymiar != A.wymiar) {  
-		delete[] tablica;
+		delete[] wartosci;
 		wymiar = A.wymiar;
-		tablica = new double[wymiar * wymiar];
+		wartosci = new double[wymiar * wymiar];
 	}
 	for (int i = 0; i < wymiar; ++i) {
 		for (int j = 0; j < wymiar; j++) {

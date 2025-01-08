@@ -8,7 +8,10 @@
 
 class Interpreter
 {
+
+    //zbior wszystkich macierzy do wykonywania operacji po kluczach
     std::map<std::string, Macierz> macierze;
+
     void PrzetworzPrzypisanie(const std::string& input);
     void UtworzMacierz(const std::string& nazwa, const std::string& dane);
     void WykonajOperacje(const std::string& nazwa, const std::string& wyrazenie);
@@ -19,7 +22,5 @@ class Interpreter
 
 public:
     void Interpretuj(const std::string& input);
-
-
 };
 

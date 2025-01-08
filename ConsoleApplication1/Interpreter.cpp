@@ -8,22 +8,26 @@ void Interpreter::Interpretuj(const std::string& input) {
     else if (input.find("transpozycja") != std::string::npos) {
         PrzetworzTranspozycje(input);
     }
-    else if (input.find("wyswietl") != std::string::npos) {
+    else if (input.find("wyswietl") != std::string::npos) { 
         PrzetworzWyswietlanie(input);
     }
     else if (input.find("wyznacznik") != std::string::npos) {
         PrzetworzWyznacznik(input);
     }
+    /////////////////////mozliwosc rozbudowy o kolejnne moduly np macierz odwrotna (funkcje juz napisane)//////////////////////
     else {
         std::cout << "Nieznana komenda: " << input << "\n";
     }
 }
 
 void Interpreter::PrzetworzPrzypisanie(const std::string& input) {
-    std::regex pattern(R"((\w+)\s*=\s*(.+))");
+    //wyrazenia regularne nazwa ZB = ZB
+    std::regex pattern(R"(\s*(\w+)\s*=\s*(.+))");
     std::smatch match;
     if (std::regex_match(input, match, pattern)) {
+        //nazwa macierzy
         std::string nazwa = match[1];
+        //wartosci do wpisania w macierz [...] lub dzialanie do wykonania
         std::string wyrazenie = match[2];
 
         if (wyrazenie[0] == '[') {
@@ -41,6 +45,7 @@ void Interpreter::PrzetworzPrzypisanie(const std::string& input) {
 void Interpreter::UtworzMacierz(const std::string& nazwa, const std::string& dane) {
     std::regex matrixPattern(R"(\[(.+)\])");
     std::smatch match;
+    //danie juz bez nawaisow []
     if (std::regex_match(dane, match, matrixPattern)) {
         std::string wiersze = match[1];
         std::istringstream stream(wiersze);
@@ -78,7 +83,7 @@ void Interpreter::UtworzMacierz(const std::string& nazwa, const std::string& dan
 }
 
 void Interpreter::WykonajOperacje(const std::string& nazwa, const std::string& wyrazenie) {
-    std::regex operationPattern(R"((\w+)\s*([+\-*/])\s*(\w+))");
+    std::regex operationPattern(R"(\s*(\w+)\s*([+\-*/])\s*(\w+))");
     std::smatch match;
     if (std::regex_match(wyrazenie, match, operationPattern)) {
         std::string op1 = match[1];
