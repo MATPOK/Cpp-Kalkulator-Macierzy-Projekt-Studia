@@ -1,34 +1,35 @@
 #include "Interpreter.h"
 
+using namespace std;
 
-void Interpreter::Interpretuj(const std::string& input) {
-    if (input.find('=') != std::string::npos) {
+void Interpreter::Interpretuj(const string& input) {
+    if (input.find('=') != string::npos) {
         PrzetworzPrzypisanie(input);
     }
-    else if (input.find("transpozycja") != std::string::npos) {
+    else if (input.find("transpozycja") != string::npos) {
         PrzetworzTranspozycje(input);
     }
-    else if (input.find("wyswietl") != std::string::npos) { 
+    else if (input.find("wyswietl") != string::npos) { 
         PrzetworzWyswietlanie(input);
     }
-    else if (input.find("wyznacznik") != std::string::npos) {
+    else if (input.find("wyznacznik") != string::npos) {
         PrzetworzWyznacznik(input);
     }
     /////////////////////mozliwosc rozbudowy o kolejnne moduly np macierz odwrotna (funkcje juz napisane)//////////////////////
     else {
-        std::cout << "Nieznana komenda: " << input << "\n";
+        cout << "Nieznana komenda: " << input << "\n";
     }
 }
 
-void Interpreter::PrzetworzPrzypisanie(const std::string& input) {
+void Interpreter::PrzetworzPrzypisanie(const string& input) {
     //wyrazenia regularne nazwa ZB = ZB
-    std::regex pattern(R"(\s*(\w+)\s*=\s*(.+))");
-    std::smatch match;
-    if (std::regex_match(input, match, pattern)) {
+    regex pattern(R"(\s*(\w+)\s*=\s*(.+))");
+    smatch match;
+    if (regex_match(input, match, pattern)) {
         //nazwa macierzy
-        std::string nazwa = match[1];
+        string nazwa = match[1];
         //wartosci do wpisania w macierz [...] lub dzialanie do wykonania
-        std::string wyrazenie = match[2];
+        string wyrazenie = match[2];
 
         if (wyrazenie[0] == '[') {
             UtworzMacierz(nazwa, wyrazenie);
@@ -38,23 +39,23 @@ void Interpreter::PrzetworzPrzypisanie(const std::string& input) {
         }
     }
     else {
-        std::cout << "B³¹d sk³adni: " << input << "\n";
+        cout << "B³¹d sk³adni: " << input << "\n";
     }
 }
 
-void Interpreter::UtworzMacierz(const std::string& nazwa, const std::string& dane) {
-    std::regex matrixPattern(R"(\[(.+)\])");
-    std::smatch match;
+void Interpreter::UtworzMacierz(const string& nazwa, const string& dane) {
+    regex matrixPattern(R"(\[(.+)\])");
+    smatch match;
     //danie juz bez nawaisow []
-    if (std::regex_match(dane, match, matrixPattern)) {
-        std::string wiersze = match[1];
-        std::istringstream stream(wiersze);
-        std::string wiersz;
-        std::vector<std::vector<double>> elementy;
+    if (regex_match(dane, match, matrixPattern)) {
+        string wiersze = match[1];
+        istringstream stream(wiersze);
+        string wiersz;
+        vector<vector<double>> elementy;
 
-        while (std::getline(stream, wiersz, ';')) {
-            std::istringstream rowStream(wiersz);
-            std::vector<double> wierszElementy;
+        while (getline(stream, wiersz, ';')) {
+            istringstream rowStream(wiersz);
+            vector<double> wierszElementy;
             double liczba;
             while (rowStream >> liczba) {
                 wierszElementy.push_back(liczba);
@@ -74,21 +75,21 @@ void Interpreter::UtworzMacierz(const std::string& nazwa, const std::string& dan
             nowaMacierz.Wypisz();
         }
         else {
-            std::cout << "B³¹d: tylko macierze kwadratowe s¹ obs³ugiwane.\n";
+            cout << "B³¹d: tylko macierze kwadratowe s¹ obs³ugiwane.\n";
         }
     }
     else {
-        std::cout << "B³¹d sk³adni danych macierzy.\n";
+        cout << "B³¹d sk³adni danych macierzy.\n";
     }
 }
 
-void Interpreter::WykonajOperacje(const std::string& nazwa, const std::string& wyrazenie) {
-    std::regex operationPattern(R"(\s*(\w+)\s*([+\-*/])\s*(\w+))");
-    std::smatch match;
-    if (std::regex_match(wyrazenie, match, operationPattern)) {
-        std::string op1 = match[1];
-        std::string operacja = match[2];
-        std::string op2 = match[3];
+void Interpreter::WykonajOperacje(const string& nazwa, const string& wyrazenie) {
+    regex operationPattern(R"(\s*(\w+)\s*([+\-*/])\s*(\w+))");
+    smatch match;
+    if (regex_match(wyrazenie, match, operationPattern)) {
+        string op1 = match[1];
+        string operacja = match[2];
+        string op2 = match[3];
 
         if (macierze.find(op1) != macierze.end() && macierze.find(op2) != macierze.end()) {
             Macierz wynik(WykonajDzialanie(macierze[op1], operacja, macierze[op2]));
@@ -97,15 +98,15 @@ void Interpreter::WykonajOperacje(const std::string& nazwa, const std::string& w
             wynik.Wypisz();
         }
         else {
-            std::cout << "B³¹d: Jedna z macierzy nie istnieje.\n";
+            cout << "B³¹d: Jedna z macierzy nie istnieje.\n";
         }
     }
     else {
-        std::cout << "B³¹d sk³adni operacji.\n";
+        cout << "B³¹d sk³adni operacji.\n";
     }
 }
 
-Macierz Interpreter::WykonajDzialanie(const Macierz& m1, const std::string& operacja, const Macierz& m2) {
+Macierz Interpreter::WykonajDzialanie(const Macierz& m1, const string& operacja, const Macierz& m2) {
     if (operacja == "+") {
         return m1 + m2;
     }
@@ -119,66 +120,66 @@ Macierz Interpreter::WykonajDzialanie(const Macierz& m1, const std::string& oper
         return m1 / m2;
     }
     else {
-        throw std::invalid_argument("Nieznana operacja: " + operacja);
+        throw invalid_argument("Nieznana operacja: " + operacja);
     }
 }
 
-void Interpreter::PrzetworzTranspozycje(const std::string& input) {
-    std::regex pattern(R"(transpozycja\((\w+)\))");
-    std::smatch match;
-    if (std::regex_match(input, match, pattern)) {
-        std::string nazwa = match[1];
+void Interpreter::PrzetworzTranspozycje(const string& input) {
+    regex pattern(R"(transpozycja\((\w+)\))");
+    smatch match;
+    if (regex_match(input, match, pattern)) {
+        string nazwa = match[1];
 
         if (macierze.find(nazwa) != macierze.end()) {
             Macierz wynik = macierze[nazwa];
             wynik.Trasponuj();
-            std::cout << "Macierz " << nazwa << " po transpozycji:\n";
+            cout << "Macierz " << nazwa << " po transpozycji:\n";
             wynik.Wypisz();
         }
         else {
-            std::cout << "B³¹d: Macierz " << nazwa << " nie istnieje.\n";
+            cout << "B³¹d: Macierz " << nazwa << " nie istnieje.\n";
         }
     }
     else {
-        std::cout << "B³¹d sk³adni polecenia transpozycji.\n";
+        cout << "B³¹d sk³adni polecenia transpozycji.\n";
     }
 }
 
-void Interpreter::PrzetworzWyznacznik(const std::string& input) {
-    std::regex pattern(R"(wyznacznik\((\w+)\))");
-    std::smatch match;
-    if (std::regex_match(input, match, pattern)) {
-        std::string nazwa = match[1];
+void Interpreter::PrzetworzWyznacznik(const string& input) {
+    regex pattern(R"(wyznacznik\((\w+)\))");
+    smatch match;
+    if (regex_match(input, match, pattern)) {
+        string nazwa = match[1];
 
         if (macierze.find(nazwa) != macierze.end()) {
             double det = macierze[nazwa].Det();
-            std::cout << "Wyznacznik macierzy " << nazwa << " wynosi: " << det << "\n";
+            cout << "Wyznacznik macierzy " << nazwa << " wynosi: " << det << "\n";
         }
         else {
-            std::cout << "B³¹d: Macierz " << nazwa << " nie istnieje.\n";
+            cout << "B³¹d: Macierz " << nazwa << " nie istnieje.\n";
         }
     }
     else {
-        std::cout << "B³¹d sk³adni polecenia wyznacznika.\n";
+        cout << "B³¹d sk³adni polecenia wyznacznika.\n";
     }
 }
 
-void Interpreter::PrzetworzWyswietlanie(const std::string& input)
+void Interpreter::PrzetworzWyswietlanie(const string& input)
 {
-    std::regex pattern(R"(wyswietl\((\w+)\))");
-    std::smatch match;
-    if (std::regex_match(input, match, pattern)) {
-        std::string nazwa = match[1];
+    regex pattern(R"(wyswietl\((\w+)\))");
+    smatch match;
+    if (regex_match(input, match, pattern)) {
+        string nazwa = match[1];
 
         if (macierze.find(nazwa) != macierze.end()) {
             macierze[nazwa].Wypisz();
         }
         else {
-            std::cout << "B³¹d: Macierz " << nazwa << " nie istnieje.\n";
+            cout << "B³¹d: Macierz " << nazwa << " nie istnieje.\n";
         }
     }
     else {
-        std::cout << "B³¹d sk³adni polecenia wyznacznika.\n";
+        cout << "B³¹d sk³adni polecenia wyznacznika.\n";
     }
 }
 

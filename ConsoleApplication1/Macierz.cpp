@@ -57,14 +57,14 @@ const void Macierz::Wypisz() const {
 	const int szerokosc = 8;             
 	const int precyzja = 3; 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	std::cout << "Macierz " <<nazwa<<"\n";
+	cout << "Macierz " <<nazwa<<"\n";
 	for (int i = 0; i < wymiar; i++) {
-		std::cout << "|"; 
+		cout << "|"; 
 		for (int j = 0; j < wymiar; j++) {
-			std::cout << std::setw(szerokosc) << std::fixed << std::setprecision(precyzja)
+			cout << setw(szerokosc) << fixed << setprecision(precyzja)
 				<< zWartosc(i, j); 
 		}
-		std::cout << " |\n"; 
+		cout << " |\n"; 
 	}
 }
 
@@ -130,7 +130,7 @@ void Macierz::Dodaj(Macierz& A)
 
 Macierz Macierz::operator+(const Macierz& A) const {
 	if (!RowneWymiary(A)) {
-		throw std::invalid_argument("Rozne wymiary macierzy!");
+		throw invalid_argument("Rozne wymiary macierzy!");
 	}
 
 	Macierz wynik(wymiar,'W');
@@ -145,7 +145,7 @@ Macierz Macierz::operator+(const Macierz& A) const {
 Macierz Macierz::operator-(const Macierz& A) const
 {
 	if (!RowneWymiary(A)) {
-		throw std::invalid_argument("Rozne wymiary macierzy!");
+		throw invalid_argument("Rozne wymiary macierzy!");
 	}
 
 	Macierz wynik(wymiar, 'W');
@@ -226,7 +226,7 @@ Macierz Macierz::Mnozenie(const Macierz& A) const
 		}
 	}
 	else {
-		throw std::runtime_error("Rozne wymiary macierzy!");
+		throw runtime_error("Rozne wymiary macierzy!");
 	}
 
 	return wynik;
@@ -236,7 +236,7 @@ Macierz Macierz::Odwrotna() const{
 	double det = Det(); 
 	if (det == 0) {
 		cout << "Macierz nieodwracalna (wyznacznik = 0)!";
-		throw std::runtime_error("Macierz nie jest odwracalna (wyznacznik = 0).");
+		throw runtime_error("Macierz nie jest odwracalna (wyznacznik = 0).");
 	}
 
 	Macierz wynik(wymiar,'W');
@@ -317,13 +317,13 @@ void Macierz::Przypisz(const Macierz& A) {
 	}
 }
 
-std::ostream& operator<<(std::ostream& wy, const Macierz& A)
+ostream& operator<<(ostream& wy, const Macierz& A)
 {
 	A.Wypisz();
 	return wy;
 }
 
-std::istream& operator>>(std::istream& we, Macierz& A)
+istream& operator>>(istream& we, Macierz& A)
 {
 	A.Wpisz();
 	return we;
