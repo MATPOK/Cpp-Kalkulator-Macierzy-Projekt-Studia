@@ -66,3 +66,13 @@ public:
 // // C = A / B;
 // cout << C;
 // cout << A.Dodaj(B)
+
+
+
+
+////dorzucic wieksze operacje
+///swoja klasa do wyrazen regularnych
+///mnozenie stala
+/// ///przede wszytkim swoje wyrazenie
+/// 
+/// //jak sie nie uda to na wektorach dzialania iloczyn skalarny itp
