@@ -15,6 +15,12 @@ void Interpreter::Interpretuj(const string& input) {
     else if (input.find("wyznacznik") != string::npos) {
         PrzetworzWyznacznik(input);
     }
+    else if (input.find("dlugosc") != string::npos) {
+        PrzetworzDlugoscWektora(input);
+    }
+    else if (input.find("iloczynskalarny") != string::npos) {
+        PrzetworzIloczynSkalarny(input);
+    }
     /////////////////////mozliwosc rozbudowy o kolejnne moduly np macierz odwrotna (funkcje juz napisane)//////////////////////
     else {
         cout << "Nieznana komenda: " << input << "\n";
@@ -75,7 +81,14 @@ void Interpreter::UtworzMacierz(const string& nazwa, const string& dane) {
             nowaMacierz.Wypisz();
         }
         else {
-            cout << "B³¹d: tylko macierze kwadratowe s¹ obs³ugiwane.\n";
+            if (elementy.size() == 1 && elementy[0].size() == 2) {
+                Vector nowyWektor(nazwa[0], elementy[0][0], elementy[0][1]);
+                vectors[nazwa] = nowyWektor;
+                nowyWektor.Wypisz();
+            }
+            else {
+                cout << "B³¹d: tylko macierze kwadratowe i wektory s¹ obs³ugiwane.\n";
+            }
         }
     }
     else {
@@ -182,5 +195,49 @@ void Interpreter::PrzetworzWyswietlanie(const string& input)
         cout << "B³¹d sk³adni polecenia wyznacznika.\n";
     }
 }
+
+void Interpreter::PrzetworzDlugoscWektora(const std::string& input)
+{
+    regex pattern(R"(dlugosc\((\w+)\))");
+    smatch match;
+    if (regex_match(input, match, pattern)) {
+        string nazwa = match[1];
+
+        if (vectors.find(nazwa) != vectors.end()) {
+            double len = vectors[nazwa].dlugoscWektora();
+            cout << "D³ugoœæ wektora " << nazwa << " wynosi: " << len << "\n";
+        }
+        else {
+            cout << "B³¹d: Wektor " << nazwa << " nie istnieje.\n";
+        }
+    }
+    else {
+        cout << "B³¹d sk³adni polecenia d³ugoœci wektora.\n";
+    }
+}
+
+void Interpreter::PrzetworzIloczynSkalarny(const std::string& input)
+{
+    std::regex pattern(R"(\s*iloczynskalarny\((\w+)\s*,\s*(\w+)\s*\))");
+    std::smatch match;
+    if (std::regex_match(input, match, pattern)) {
+        // nazwa macierzy
+        std::string w1 = match[1]; // Pierwszy wektor
+        std::string w2 = match[2]; // Drugi wektor
+        // SprawdŸ, czy wektory istniej¹ w mapie
+        if (vectors.find(w1) != vectors.end() && vectors.find(w2) != vectors.end()) {
+            std::cout << "Iloczyn skalarny wektorów " << w1 << " i " << w2
+                << " to " << vectors[w1].iloczynSkalarny(vectors[w2]) << std::endl;
+        }
+        else {
+            std::cout << "B³êdne wektory!" << std::endl;
+        }
+    }
+    else {
+        std::cout << "B³êdny format wejœcia!" << std::endl;
+    }
+}
+
+
 
 

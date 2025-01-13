@@ -21,7 +21,6 @@ int main() {
 
         interpreter.Interpretuj(input);
     }
-
     return 0;
     
     
