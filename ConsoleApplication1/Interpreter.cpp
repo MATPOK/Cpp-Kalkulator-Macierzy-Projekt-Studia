@@ -21,6 +21,12 @@ void Interpreter::Interpretuj(const string& input) {
     else if (input.find("iloczynskalarny") != string::npos) {
         PrzetworzIloczynSkalarny(input);
     }
+    else if (input.find("mnozeniestala") != string::npos) {
+        PrzetworzMnozenieStala(input);
+    }
+    else if (input.find("katwektory") != string::npos) {
+        PrzetworzKatWektory(input);
+    }
     /////////////////////mozliwosc rozbudowy o kolejnne moduly np macierz odwrotna (funkcje juz napisane)//////////////////////
     else {
         cout << "Nieznana komenda: " << input << "\n";
@@ -237,6 +243,53 @@ void Interpreter::PrzetworzIloczynSkalarny(const std::string& input)
         std::cout << "B³êdny format wejœcia!" << std::endl;
     }
 }
+
+void Interpreter::PrzetworzMnozenieStala(const std::string& input)
+{
+    // Regex dopasowuj¹cy liczbê zmiennoprzecinkow¹ i nazwê macierzy
+    std::regex pattern(R"(\s*mnozeniestala\(\s*([+-]?\d+(\.\d+)?)\s*,\s*(\w+)\s*\))");
+    std::smatch match;
+
+    // Dopasowanie
+    if (std::regex_match(input, match, pattern)) {
+        // Pobranie liczby zmiennoprzecinkowej
+        double stala = std::stod(match[1].str());
+        // Pobranie nazwy macierzy
+        std::string nazwa = match[3].str();
+
+        // Sprawdzenie, czy macierz istnieje w mapie
+        if (macierze.find(nazwa) != macierze.end()) {
+            macierze[nazwa].MnozenieStala(stala);
+            macierze[nazwa].Wypisz();
+        }
+        else {
+            std::cout << "B³¹d: Macierz " << nazwa << " nie istnieje.\n";
+        }
+    }
+    else {
+        std::cout << "B³¹d sk³adni polecenia mno¿enia przez sta³¹.\n";
+    }
+}
+
+void Interpreter::PrzetworzKatWektory(const std::string& input)
+{
+    regex pattern(R"(katwektory\(\s*(\w+)\s*,\s*(\w+)\s*\))");
+    smatch match;
+    if (regex_match(input, match, pattern)) {
+        string w1 = match[1];
+        string w2 = match[2];
+        if (vectors.find(w1) != vectors.end() && vectors.find(w2) != vectors.end()) {
+            cout << "K¹t miêdzy wektorami " << w1 << " i " << w2 << " to " << vectors[w1].katMiedzyWektorami(vectors[w2]) << endl;
+        }
+        else {
+            cout << "B³¹d: wektor " << w1 << "/" << w2 << " nie istnieje.\n";
+        }
+    }
+    else {
+        cout << "B³¹d sk³adni polecenia k¹ta miêdzy wektorami.\n";
+    }
+}
+
 
 
 

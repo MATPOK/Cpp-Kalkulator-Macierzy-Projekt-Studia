@@ -18,5 +18,7 @@ public:
 
     const double dlugoscWektora() const;
     const double iloczynSkalarny(const Vector& w) const;
+    const double katMiedzyWektorami(const Vector& w) const;
+
 };
 

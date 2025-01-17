@@ -23,7 +23,8 @@ class Interpreter
     void PrzetworzWyswietlanie(const std::string& input);
     void PrzetworzDlugoscWektora(const std::string& input);
     void PrzetworzIloczynSkalarny(const std::string& input);
-    //void PrzetworzMnozenieStala(const std::string& input);
+    void PrzetworzMnozenieStala(const std::string& input);
+    void PrzetworzKatWektory(const std::string& input);
 
 public:
     void Interpretuj(const std::string& input);

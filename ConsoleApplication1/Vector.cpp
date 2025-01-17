@@ -57,3 +57,17 @@ const double Vector::iloczynSkalarny(const Vector& w) const
 {
     return (wartosci[0] * w.wartosci[0] + wartosci[1] * w.wartosci[1]);
 }
+
+const double Vector::katMiedzyWektorami(const Vector& w) const
+{
+    double kat = 0.0;
+
+    double skalar = iloczynSkalarny(w);
+    double dlA = dlugoscWektora();
+    double dlB = w.dlugoscWektora();
+
+    double cos = skalar/(dlA*dlB);
+    kat = acos(cos) * 180.0 / 3.14159265358979323846;
+
+    return kat;
+}

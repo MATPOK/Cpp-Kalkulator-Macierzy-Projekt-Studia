@@ -70,9 +70,9 @@ public:
 
 
 
-////dorzucic wieksze operacje
+////dorzucic wieksze operacje 
 ///swoja klasa do wyrazen regularnych
-///mnozenie stala
+///mnozenie stala DONE
 /// ///przede wszytkim swoje wyrazenie
 /// 
-/// //jak sie nie uda to na wektorach dzialania iloczyn skalarny itp
+/// //jak sie nie uda to na wektorach dzialania iloczyn skalarny itp DONE
