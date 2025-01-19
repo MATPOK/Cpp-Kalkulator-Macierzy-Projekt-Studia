@@ -1,7 +1,9 @@
 ﻿#include "Macierz.h"
 #include "Interpreter.h"
-#include <iostream>
 #include "Vector.h"
+#include "MyRegex.h"
+#include <iostream>
+
 using namespace std;
 
 int main() {
@@ -37,10 +39,9 @@ int main() {
   
     return 0;
     
-    
-   
-    
-    
 
   
 }
+   
+    
+

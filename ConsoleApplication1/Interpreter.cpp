@@ -33,15 +33,36 @@ void Interpreter::Interpretuj(const string& input) {
     }
 }
 
+//void Interpreter::PrzetworzPrzypisanie(const string& input) {
+//    //wyrazenia regularne nazwa ZB = ZB
+//    regex pattern(R"(\s*(\w+)\s*=\s*(.+))");
+//    smatch match;
+//    if (regex_match(input, match, pattern)) {
+//        //nazwa macierzy
+//        string nazwa = match[1];
+//        //wartosci do wpisania w macierz [...] lub dzialanie do wykonania
+//        string wyrazenie = match[2];
+//
+//        if (wyrazenie[0] == '[') {
+//            UtworzMacierz(nazwa, wyrazenie);
+//        }
+//        else {
+//            WykonajOperacje(nazwa, wyrazenie);
+//        }
+//    }
+//    else {
+//        cout << "B³¹d sk³adni: " << input << "\n";
+//    }
+//}
 void Interpreter::PrzetworzPrzypisanie(const string& input) {
     //wyrazenia regularne nazwa ZB = ZB
-    regex pattern(R"(\s*(\w+)\s*=\s*(.+))");
-    smatch match;
-    if (regex_match(input, match, pattern)) {
+    MyRegex pattern;
+    pattern.Analizuj(input,"swsd=sa");
+        if(isalpha(pattern.zZapisane(1)[0])) {
         //nazwa macierzy
-        string nazwa = match[1];
+        string nazwa = pattern.zZapisane(1);
         //wartosci do wpisania w macierz [...] lub dzialanie do wykonania
-        string wyrazenie = match[2];
+        string wyrazenie = pattern.zZapisane(2);
 
         if (wyrazenie[0] == '[') {
             UtworzMacierz(nazwa, wyrazenie);
@@ -55,12 +76,14 @@ void Interpreter::PrzetworzPrzypisanie(const string& input) {
     }
 }
 
+
+
 void Interpreter::UtworzMacierz(const string& nazwa, const string& dane) {
-    regex matrixPattern(R"(\[(.+)\])");
-    smatch match;
-    //danie juz bez nawaisow []
-    if (regex_match(dane, match, matrixPattern)) {
-        string wiersze = match[1];
+    MyRegex pattern;
+    pattern.Analizuj(dane, "z[]"); // Dopasowuje dane w nawiasach kwadratowych
+    string wiersze = pattern.zZapisane(1);
+
+    if (!wiersze.empty()) {
         istringstream stream(wiersze);
         string wiersz;
         vector<vector<double>> elementy;
@@ -102,14 +125,15 @@ void Interpreter::UtworzMacierz(const string& nazwa, const string& dane) {
     }
 }
 
-void Interpreter::WykonajOperacje(const string& nazwa, const string& wyrazenie) {
-    regex operationPattern(R"(\s*(\w+)\s*([+\-*/])\s*(\w+))");
-    smatch match;
-    if (regex_match(wyrazenie, match, operationPattern)) {
-        string op1 = match[1];
-        string operacja = match[2];
-        string op2 = match[3];
 
+void Interpreter::WykonajOperacje(const string& nazwa, const string& wyrazenie) {
+    MyRegex pattern;
+    pattern.Analizuj(wyrazenie, "wowo"); // Dopasowuje wzorzec: operand1 operator operand2
+    string op1 = pattern.zZapisane(1);
+    string operacja = pattern.zZapisane(2);
+    string op2 = pattern.zZapisane(3);
+
+    if (!op1.empty() && !operacja.empty() && !op2.empty()) {
         if (macierze.find(op1) != macierze.end() && macierze.find(op2) != macierze.end()) {
             Macierz wynik(WykonajDzialanie(macierze[op1], operacja, macierze[op2]));
             macierze[nazwa] = wynik;
@@ -124,6 +148,7 @@ void Interpreter::WykonajOperacje(const string& nazwa, const string& wyrazenie) 
         cout << "B³¹d sk³adni operacji.\n";
     }
 }
+
 
 Macierz Interpreter::WykonajDzialanie(const Macierz& m1, const string& operacja, const Macierz& m2) {
     if (operacja == "+") {
@@ -143,12 +168,13 @@ Macierz Interpreter::WykonajDzialanie(const Macierz& m1, const string& operacja,
     }
 }
 
-void Interpreter::PrzetworzTranspozycje(const string& input) {
-    regex pattern(R"(transpozycja\((\w+)\))");
-    smatch match;
-    if (regex_match(input, match, pattern)) {
-        string nazwa = match[1];
 
+void Interpreter::PrzetworzTranspozycje(const string& input) {
+    MyRegex pattern;
+    pattern.Analizuj(input, "c\"transpozycja\"p()w");
+    string nazwa = pattern.zZapisane(1);
+
+    if (!nazwa.empty()) {
         if (macierze.find(nazwa) != macierze.end()) {
             Macierz wynik = macierze[nazwa];
             wynik.Trasponuj();
@@ -162,14 +188,17 @@ void Interpreter::PrzetworzTranspozycje(const string& input) {
     else {
         cout << "B³¹d sk³adni polecenia transpozycji.\n";
     }
+    cout << nazwa;
+    pattern.wZapisane();
 }
 
-void Interpreter::PrzetworzWyznacznik(const string& input) {
-    regex pattern(R"(wyznacznik\((\w+)\))");
-    smatch match;
-    if (regex_match(input, match, pattern)) {
-        string nazwa = match[1];
 
+void Interpreter::PrzetworzWyznacznik(const string& input) {
+    MyRegex pattern;
+    pattern.Analizuj(input, "c\"wyznacznik\"p()w"); // Dopasowuje wzorzec: wyznacznik(nazwa)
+    string nazwa = pattern.zZapisane(1);
+
+    if (!nazwa.empty()) {
         if (macierze.find(nazwa) != macierze.end()) {
             double det = macierze[nazwa].Det();
             cout << "Wyznacznik macierzy " << nazwa << " wynosi: " << det << "\n";
@@ -181,34 +210,46 @@ void Interpreter::PrzetworzWyznacznik(const string& input) {
     else {
         cout << "B³¹d sk³adni polecenia wyznacznika.\n";
     }
+    
+    
 }
+
 
 void Interpreter::PrzetworzWyswietlanie(const string& input)
 {
-    regex pattern(R"(wyswietl\((\w+)\))");
-    smatch match;
-    if (regex_match(input, match, pattern)) {
-        string nazwa = match[1];
+    MyRegex pattern;
 
+    // Analizuj dane wejœciowe
+    pattern.Analizuj(input, "c\"wyswietl\"p()w");
+
+    // Pobierz nazwê macierzy z zapisanych danych
+    string nazwa = pattern.zZapisane(1);
+
+    if (!nazwa.empty()) {
+        // SprawdŸ, czy macierz istnieje w mapie
         if (macierze.find(nazwa) != macierze.end()) {
-            macierze[nazwa].Wypisz();
+            Macierz wynik = macierze[nazwa];
+            cout << "Wyœwietlanie macierzy " << nazwa << ":\n";
+            wynik.Wypisz();
         }
         else {
-            cout << "B³¹d: Macierz " << nazwa << " nie istnieje.\n";
+            cout << "B³¹d: Macierz \"" << nazwa << "\" nie istnieje.\n";
         }
     }
     else {
-        cout << "B³¹d sk³adni polecenia wyznacznika.\n";
+        // Obs³uga b³êdu sk³adni
+        cout << "B³¹d sk³adni polecenia \"wyswietl\". Poprawny format: wyswietl(NazwaMacierzy).\n";
     }
+    
 }
 
-void Interpreter::PrzetworzDlugoscWektora(const std::string& input)
-{
-    regex pattern(R"(dlugosc\((\w+)\))");
-    smatch match;
-    if (regex_match(input, match, pattern)) {
-        string nazwa = match[1];
 
+void Interpreter::PrzetworzDlugoscWektora(const string& input) {
+    MyRegex pattern;
+    pattern.Analizuj(input, "c\"dlugosc\"p()sw"); // Dopasowuje wzorzec: dlugosc(nazwa)
+    string nazwa = pattern.zZapisane(1);
+
+    if (!nazwa.empty()) {
         if (vectors.find(nazwa) != vectors.end()) {
             double len = vectors[nazwa].dlugoscWektora();
             cout << "D³ugoœæ wektora " << nazwa << " wynosi: " << len << "\n";
@@ -222,71 +263,70 @@ void Interpreter::PrzetworzDlugoscWektora(const std::string& input)
     }
 }
 
-void Interpreter::PrzetworzIloczynSkalarny(const std::string& input)
-{
-    std::regex pattern(R"(\s*iloczynskalarny\((\w+)\s*,\s*(\w+)\s*\))");
-    std::smatch match;
-    if (std::regex_match(input, match, pattern)) {
-        // nazwa macierzy
-        std::string w1 = match[1]; // Pierwszy wektor
-        std::string w2 = match[2]; // Drugi wektor
-        // SprawdŸ, czy wektory istniej¹ w mapie
+
+void Interpreter::PrzetworzIloczynSkalarny(const std::string& input) {
+    MyRegex pattern;
+    pattern.Analizuj(input, "c\"iloczynskalarny\"sp()swsd,sw"); // Dopasowuje wzorzec: iloczynskalarny(w1,w2)
+    string w1 = pattern.zZapisane(1);
+    string w2 = pattern.zZapisane(2);
+    cout << endl << w1 << endl << w2;
+    pattern.wZapisane();
+    if (!w1.empty() && !w2.empty()) {
         if (vectors.find(w1) != vectors.end() && vectors.find(w2) != vectors.end()) {
-            std::cout << "Iloczyn skalarny wektorów " << w1 << " i " << w2
-                << " to " << vectors[w1].iloczynSkalarny(vectors[w2]) << std::endl;
+            cout << "Iloczyn skalarny wektorów " << w1 << " i " << w2
+                << " to " << vectors[w1].iloczynSkalarny(vectors[w2]) << endl;
         }
         else {
-            std::cout << "B³êdne wektory!" << std::endl;
+            cout << "B³¹d: Wektor " << w1 << " lub " << w2 << " nie istnieje.\n";
         }
     }
     else {
-        std::cout << "B³êdny format wejœcia!" << std::endl;
+        cout << "B³¹d sk³adni polecenia iloczynu skalarnego.\n";
     }
 }
 
-void Interpreter::PrzetworzMnozenieStala(const std::string& input)
-{
-    // Regex dopasowuj¹cy liczbê zmiennoprzecinkow¹ i nazwê macierzy
-    std::regex pattern(R"(\s*mnozeniestala\(\s*([+-]?\d+(\.\d+)?)\s*,\s*(\w+)\s*\))");
-    std::smatch match;
 
-    // Dopasowanie
-    if (std::regex_match(input, match, pattern)) {
-        // Pobranie liczby zmiennoprzecinkowej
-        double stala = std::stod(match[1].str());
-        // Pobranie nazwy macierzy
-        std::string nazwa = match[3].str();
+void Interpreter::PrzetworzMnozenieStala(const std::string& input) {
+    MyRegex pattern;
+    pattern.Analizuj(input, "c\"mnozeniestala\"p()sld,sw"); // Dopasowuje wzorzec: mnozeniestala(stala,nazwa)
+    string stalaStr = pattern.zZapisane(1);
+    string nazwa = pattern.zZapisane(2);
 
-        // Sprawdzenie, czy macierz istnieje w mapie
+    if (!stalaStr.empty() && !nazwa.empty()) {
+        double stala = std::stod(stalaStr);
         if (macierze.find(nazwa) != macierze.end()) {
             macierze[nazwa].MnozenieStala(stala);
             macierze[nazwa].Wypisz();
         }
         else {
-            std::cout << "B³¹d: Macierz " << nazwa << " nie istnieje.\n";
+            cout << "B³¹d: Macierz " << nazwa << " nie istnieje.\n";
         }
     }
     else {
-        std::cout << "B³¹d sk³adni polecenia mno¿enia przez sta³¹.\n";
+        cout << "B³¹d sk³adni polecenia mno¿enia przez sta³¹.\n";
     }
 }
 
+
 void Interpreter::PrzetworzKatWektory(const std::string& input)
 {
-    regex pattern(R"(katwektory\(\s*(\w+)\s*,\s*(\w+)\s*\))");
-    smatch match;
-    if (regex_match(input, match, pattern)) {
-        string w1 = match[1];
-        string w2 = match[2];
+    MyRegex pattern;
+    pattern.Analizuj(input, "c\"katwektory\"sp()swsd,sw"); // Dopasowuje wzorzec: iloczynskalarny(w1,w2)
+    string w1 = pattern.zZapisane(1);
+    string w2 = pattern.zZapisane(2);
+    cout << endl << w1 << endl << w2;
+    pattern.wZapisane();
+    if (!w1.empty() && !w2.empty()) {
         if (vectors.find(w1) != vectors.end() && vectors.find(w2) != vectors.end()) {
-            cout << "K¹t miêdzy wektorami " << w1 << " i " << w2 << " to " << vectors[w1].katMiedzyWektorami(vectors[w2]) << endl;
+            cout << "K¹t miêdzy wektorami  " << w1 << " i " << w2
+                << " to " << vectors[w1].katMiedzyWektorami(vectors[w2]) << endl;
         }
         else {
-            cout << "B³¹d: wektor " << w1 << "/" << w2 << " nie istnieje.\n";
+            cout << "B³¹d: Wektor " << w1 << " lub " << w2 << " nie istnieje.\n";
         }
     }
     else {
-        cout << "B³¹d sk³adni polecenia k¹ta miêdzy wektorami.\n";
+        cout << "B³¹d sk³adni polecenia iloczynu skalarnego.\n";
     }
 }
 

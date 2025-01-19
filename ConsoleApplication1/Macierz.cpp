@@ -191,7 +191,13 @@ void Macierz::MnozenieStala(double a)
 {
 	for (int i = 0; i < wymiar; i++) {
 		for (int j = 0; j < wymiar; j++) {
-			UstawWartosc(i, j, zWartosc(i, j)*a);
+			if (zWartosc(i, j) * a == 0) {
+				UstawWartosc(i, j, 0);
+			}
+			else {
+				UstawWartosc(i, j, zWartosc(i, j) * a);
+			}
+			
 		}
 	}
 }

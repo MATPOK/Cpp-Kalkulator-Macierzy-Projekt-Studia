@@ -130,11 +130,13 @@
     <ClCompile Include="ConsoleApplication1.cpp" />
     <ClCompile Include="Interpreter.cpp" />
     <ClCompile Include="Macierz.cpp" />
+    <ClCompile Include="MyRegex.cpp" />
     <ClCompile Include="Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Interpreter.h" />
     <ClInclude Include="Macierz.h" />
+    <ClInclude Include="MyRegex.h" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

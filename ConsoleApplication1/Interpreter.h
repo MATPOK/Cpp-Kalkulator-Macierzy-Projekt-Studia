@@ -6,6 +6,7 @@
 #include <map>
 #include "Macierz.h"
 #include "Vector.h"
+#include "MyRegex.h"
 
 class Interpreter
 {
