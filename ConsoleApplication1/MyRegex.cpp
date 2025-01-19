@@ -75,7 +75,7 @@ string MyRegex::Wyrazenie()
     int i = 0;
     
     while (i <= dlugosc - 1) {
-        cout << ciag[i];
+        
         if (isalpha(ciag[i])) {
             pom += ciag[i];
         }
@@ -129,40 +129,27 @@ std::string MyRegex::DowolnyZnak(char znak) {
         // Zwraca czêœæ ci¹gu po znalezionym znaku
         pom = ciag.substr(pozycja + 1);
         ciag = pom; // Aktualizuje g³ówny ci¹g
-        cout << ciag;
+       
         dlugosc = ciag.size();
     }
     return pom;
 }
 
 
-//string MyRegex::Pomiedzy(char z1, char z2) {
-//    size_t poczatek = ciag.find(z1); // Znajduje pierwsze '('
-//    size_t koniec = ciag.find(z2, poczatek); // Znajduje ')' po '('
-//
-//    if (poczatek != string::npos && koniec != string::npos) {
-//        string zawartosc = ciag.substr(poczatek + 1, koniec - poczatek - 1); // Wyci¹ga zawartoœæ miêdzy nawiasami
-//        ciag = zawartosc;
-//        dlugosc = ciag.size();
-//        //Nadpisz(zawartosc);
-//        return zawartosc;
-//    }
-//
-//    return ""; // Zwraca pusty ci¹g, jeœli nawiasów brak
-//}
+
 
 string MyRegex::PomiedzyDoPrzypisywania(char z1, char z2) {
-    size_t poczatek = ciag.find(z1); // Znajduje pierwsze '('
-    size_t koniec = ciag.find(z2, poczatek); // Znajduje ')' po '('
+    size_t poczatek = ciag.find(z1); 
+    size_t koniec = ciag.find(z2, poczatek); 
 
     if (poczatek != string::npos && koniec != string::npos) {
-        string zawartosc = ciag.substr(poczatek + 1, koniec - poczatek - 1); // Wyci¹ga zawartoœæ miêdzy nawiasami
+        string zawartosc = ciag.substr(poczatek + 1, koniec - poczatek - 1); 
         
         Nadpisz(zawartosc);
         return zawartosc;
     }
 
-    return ""; // Zwraca pusty ci¹g, jeœli nawiasów brak
+    return ""; 
 }
 
 std::string MyRegex::Pomiedzy(char z1, char z2) {
@@ -170,10 +157,10 @@ std::string MyRegex::Pomiedzy(char z1, char z2) {
     size_t koniec = ciag.find(z2, poczatek + 1);
 
     if (poczatek != std::string::npos && koniec != std::string::npos) {
-        std::string zawartosc = ciag.substr(poczatek + 1, koniec - poczatek - 1);
+        string zawartosc = ciag.substr(poczatek + 1, koniec - poczatek - 1);
         ciag = zawartosc;
         dlugosc = ciag.size();
-        cout << endl << "Zawartosc to " << zawartosc << endl;
+        
         return zawartosc;
     }
     return "";
@@ -193,7 +180,7 @@ string MyRegex::Liczba()
     int i = 0;
 
     while (i <= dlugosc - 1) {
-        cout << ciag[i];
+       
         if (isdigit(ciag[i]) || ciag[i] == '.' || ciag[i] == '-') {
             pom += ciag[i];
         }
@@ -237,8 +224,8 @@ string* MyRegex::Analizuj(const string& input, string wyrazenie)
     zapisane[0] = ciag;
 
     for (int i = 0; i <= wyrazenie.size() - 1; i++) {
-        cout <<endl<< wyrazenie[i];
-        wZapisane();
+       
+        
         switch (wyrazenie[i]) {
 
         case 'a':
@@ -256,7 +243,7 @@ string* MyRegex::Analizuj(const string& input, string wyrazenie)
         case 'w':
             Wyrazenie();
             
-            cout << endl<<ciag;
+            
             break;
 
         case 'c': {
@@ -280,27 +267,27 @@ string* MyRegex::Analizuj(const string& input, string wyrazenie)
         case 'd':
             DowolnyZnak(wyrazenie[i + 1]);
             i += 1;
-            cout << endl<<ciag;
+           
             break;
 
         case 'p':
             Pomiedzy(wyrazenie[i + 1], wyrazenie[i + 2]);
             i += 2;
-            cout << endl<<ciag;
+          
            
             break;
 
         case 'z':
             PomiedzyDoPrzypisywania(wyrazenie[i + 1], wyrazenie[i + 2]);
             i += 2;
-            cout << endl << ciag;
+           
 
             break;
 
         case 'l':
             Liczba();
 
-            cout << endl << ciag;
+           
             break;
         default:
             // Jeœli ¿aden przypadek nie pasuje, opcjonalny kod

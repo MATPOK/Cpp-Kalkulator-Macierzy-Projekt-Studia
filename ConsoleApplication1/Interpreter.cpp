@@ -33,35 +33,14 @@ void Interpreter::Interpretuj(const string& input) {
     }
 }
 
-//void Interpreter::PrzetworzPrzypisanie(const string& input) {
-//    //wyrazenia regularne nazwa ZB = ZB
-//    regex pattern(R"(\s*(\w+)\s*=\s*(.+))");
-//    smatch match;
-//    if (regex_match(input, match, pattern)) {
-//        //nazwa macierzy
-//        string nazwa = match[1];
-//        //wartosci do wpisania w macierz [...] lub dzialanie do wykonania
-//        string wyrazenie = match[2];
-//
-//        if (wyrazenie[0] == '[') {
-//            UtworzMacierz(nazwa, wyrazenie);
-//        }
-//        else {
-//            WykonajOperacje(nazwa, wyrazenie);
-//        }
-//    }
-//    else {
-//        cout << "B³¹d sk³adni: " << input << "\n";
-//    }
-//}
+
 void Interpreter::PrzetworzPrzypisanie(const string& input) {
-    //wyrazenia regularne nazwa ZB = ZB
     MyRegex pattern;
     pattern.Analizuj(input,"swsd=sa");
         if(isalpha(pattern.zZapisane(1)[0])) {
-        //nazwa macierzy
+
         string nazwa = pattern.zZapisane(1);
-        //wartosci do wpisania w macierz [...] lub dzialanie do wykonania
+
         string wyrazenie = pattern.zZapisane(2);
 
         if (wyrazenie[0] == '[') {
@@ -80,7 +59,7 @@ void Interpreter::PrzetworzPrzypisanie(const string& input) {
 
 void Interpreter::UtworzMacierz(const string& nazwa, const string& dane) {
     MyRegex pattern;
-    pattern.Analizuj(dane, "z[]"); // Dopasowuje dane w nawiasach kwadratowych
+    pattern.Analizuj(dane, "z[]"); 
     string wiersze = pattern.zZapisane(1);
 
     if (!wiersze.empty()) {
@@ -128,7 +107,7 @@ void Interpreter::UtworzMacierz(const string& nazwa, const string& dane) {
 
 void Interpreter::WykonajOperacje(const string& nazwa, const string& wyrazenie) {
     MyRegex pattern;
-    pattern.Analizuj(wyrazenie, "wowo"); // Dopasowuje wzorzec: operand1 operator operand2
+    pattern.Analizuj(wyrazenie, "swsoswso"); // Dopasowuje wzorzec: operand1 operator operand2
     string op1 = pattern.zZapisane(1);
     string operacja = pattern.zZapisane(2);
     string op2 = pattern.zZapisane(3);
@@ -188,8 +167,7 @@ void Interpreter::PrzetworzTranspozycje(const string& input) {
     else {
         cout << "B³¹d sk³adni polecenia transpozycji.\n";
     }
-    cout << nazwa;
-    pattern.wZapisane();
+   
 }
 
 
@@ -269,8 +247,8 @@ void Interpreter::PrzetworzIloczynSkalarny(const std::string& input) {
     pattern.Analizuj(input, "c\"iloczynskalarny\"sp()swsd,sw"); // Dopasowuje wzorzec: iloczynskalarny(w1,w2)
     string w1 = pattern.zZapisane(1);
     string w2 = pattern.zZapisane(2);
-    cout << endl << w1 << endl << w2;
-    pattern.wZapisane();
+
+  
     if (!w1.empty() && !w2.empty()) {
         if (vectors.find(w1) != vectors.end() && vectors.find(w2) != vectors.end()) {
             cout << "Iloczyn skalarny wektorów " << w1 << " i " << w2
@@ -314,8 +292,7 @@ void Interpreter::PrzetworzKatWektory(const std::string& input)
     pattern.Analizuj(input, "c\"katwektory\"sp()swsd,sw"); // Dopasowuje wzorzec: iloczynskalarny(w1,w2)
     string w1 = pattern.zZapisane(1);
     string w2 = pattern.zZapisane(2);
-    cout << endl << w1 << endl << w2;
-    pattern.wZapisane();
+   
     if (!w1.empty() && !w2.empty()) {
         if (vectors.find(w1) != vectors.end() && vectors.find(w2) != vectors.end()) {
             cout << "K¹t miêdzy wektorami  " << w1 << " i " << w2
